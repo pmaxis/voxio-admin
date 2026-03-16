@@ -1,0 +1,12 @@
+services:
+  voxio-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      API_HOST: host.docker.internal
+      API_PORT: 3000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
