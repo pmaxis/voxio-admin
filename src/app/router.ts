@@ -7,7 +7,7 @@ import AppLayout from '@/widgets/layout/AppLayout.vue';
 const usersRouteNames = ['users', 'userCreate', 'userEdit'] as const;
 const rolesRouteNames = ['roles', 'roleCreate', 'roleEdit'] as const;
 const permissionsRouteNames = ['permissions', 'permissionCreate', 'permissionEdit'] as const;
-const clientsRouteNames = ['clients', 'clientCreate', 'clientEdit'] as const;
+const clientsRouteNames = ['clients', 'clientCreate', 'clientEdit', 'storage'] as const;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -82,6 +82,11 @@ const router = createRouter({
           path: 'clients/new',
           name: 'clientCreate',
           component: () => import('@/pages/ClientFormPage.vue'),
+        },
+        {
+          path: 'clients/storage',
+          name: 'storage',
+          component: () => import('@/pages/StoragePage.vue'),
         },
         {
           path: 'clients/:id/edit',
