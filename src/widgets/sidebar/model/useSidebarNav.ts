@@ -32,17 +32,29 @@ export type NavItem = NavLink | NavGroup;
 const navStructureRaw: NavItem[] = [
   { type: 'link', name: 'dashboard', label: 'Головна', to: { name: 'dashboard' } },
   {
-    type: 'link',
-    name: 'users',
-    label: 'Користувачі',
-    to: { name: 'users' },
-    routeNames: ['users', 'userCreate', 'userEdit'],
+    type: 'group',
+    id: 'users',
+    label: 'Клієнти',
+    children: [
+      {
+        name: 'clients',
+        label: 'Користувачі',
+        to: { name: 'clients' },
+        routeNames: ['clients', 'clientCreate', 'clientEdit'],
+      },
+    ],
   },
   {
     type: 'group',
-    id: 'roles-permissions',
-    label: 'Ролі та дозволи',
+    id: 'administration',
+    label: 'Адміністрування',
     children: [
+      {
+        name: 'users',
+        label: 'Користувачі системи',
+        to: { name: 'users' },
+        routeNames: ['users', 'userCreate', 'userEdit'],
+      },
       {
         name: 'roles',
         label: 'Ролі',
@@ -67,25 +79,28 @@ export function useSidebarNav() {
   const navStructure = computed(() =>
     navStructureRaw
       .filter((item) => {
-        if (item.type === 'link' && item.name === 'users') {
-          return can(PERMISSIONS.USERS_READ);
+        if (item.type === 'link') return true;
+        if (item.type === 'group' && item.id === 'users') {
+          return can(PERMISSIONS.MANAGE_ALL);
         }
-        if (item.type === 'group' && item.id === 'roles-permissions') {
+        if (item.type === 'group' && item.id === 'administration') {
+          const hasUsers = can(PERMISSIONS.USERS_READ);
           const hasRoles = can(PERMISSIONS.ROLES_READ);
           const hasPermissions = can(PERMISSIONS.PERMISSIONS_READ);
-          return hasRoles || hasPermissions;
+          return hasUsers || hasRoles || hasPermissions;
         }
         return true;
       })
       .map((item) => {
-        if (item.type === 'group' && item.id === 'roles-permissions') {
+        if (item.type === 'group' && item.id === 'administration') {
           return {
             ...item,
-            children: item.children.filter((child) =>
-              child.name === 'roles'
-                ? can(PERMISSIONS.ROLES_READ)
-                : can(PERMISSIONS.PERMISSIONS_READ),
-            ),
+            children: item.children.filter((child) => {
+              if (child.name === 'users') return can(PERMISSIONS.USERS_READ);
+              if (child.name === 'roles') return can(PERMISSIONS.ROLES_READ);
+              if (child.name === 'permissions') return can(PERMISSIONS.PERMISSIONS_READ);
+              return true;
+            }),
           };
         }
         return item;

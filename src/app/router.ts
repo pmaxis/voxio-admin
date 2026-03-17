@@ -7,6 +7,7 @@ import AppLayout from '@/widgets/layout/AppLayout.vue';
 const usersRouteNames = ['users', 'userCreate', 'userEdit'] as const;
 const rolesRouteNames = ['roles', 'roleCreate', 'roleEdit'] as const;
 const permissionsRouteNames = ['permissions', 'permissionCreate', 'permissionEdit'] as const;
+const clientsRouteNames = ['clients', 'clientCreate', 'clientEdit'] as const;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -76,6 +77,21 @@ const router = createRouter({
           path: 'users',
           name: 'users',
           component: () => import('@/pages/UsersPage.vue'),
+        },
+        {
+          path: 'clients/new',
+          name: 'clientCreate',
+          component: () => import('@/pages/ClientFormPage.vue'),
+        },
+        {
+          path: 'clients/:id/edit',
+          name: 'clientEdit',
+          component: () => import('@/pages/ClientFormPage.vue'),
+        },
+        {
+          path: 'clients',
+          name: 'clients',
+          component: () => import('@/pages/ClientsPage.vue'),
         },
         {
           path: 'my-account',
@@ -153,6 +169,14 @@ router.beforeEach(async (to, _from, next) => {
           ? can(PERMISSIONS.PERMISSIONS_CREATE)
           : can(PERMISSIONS.PERMISSIONS_UPDATE);
     if (!allowed) {
+      next({ name: 'dashboard' });
+      return;
+    }
+  }
+
+  if (isAuth && clientsRouteNames.includes(name as (typeof clientsRouteNames)[number])) {
+    const { can } = usePermissions();
+    if (!can(PERMISSIONS.MANAGE_ALL)) {
       next({ name: 'dashboard' });
       return;
     }
