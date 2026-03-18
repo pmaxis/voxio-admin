@@ -1,15 +1,15 @@
 # Voxio Admin
 
-Admin panel for managing Voxio users, roles, permissions, personal account, and sessions.
+Admin panel for managing Voxio: clients, credits, files, transcription jobs, transcripts, system users, roles, permissions, personal account, and sessions.
 
 ## Tech Stack
 
 - Vue 3 + TypeScript
-- Vite
+- Vite 7
 - Pinia
 - Vue Router
 - Axios
-- Tailwind CSS
+- Tailwind CSS 4
 
 ## Requirements
 
@@ -76,38 +76,49 @@ On Linux, if `host.docker.internal` does not work, set `API_HOST` to your host I
 - **Logout:** `POST /auth/logout`
 - Current user is resolved from access token payload (`userId`, `permissions`) + `GET /users/:id`
 - Admin panel access requires `manage.all`
-- User section access is additionally controlled by:
-  - `users.read`
-  - `users.create`
-  - `users.update`
-  - `users.delete`
+- Section access is controlled by permissions:
+  - **Clients:** `manage.all` (clients, credits, storage, jobs, transcripts)
+  - **System users:** `users.read`, `users.create`, `users.update`
+  - **Roles:** `roles.read`, `roles.create`, `roles.update`
+  - **Permissions:** `permissions.read`, `permissions.create`, `permissions.update`
 
 ## Main Pages
 
-- `/login` — sign in
-- `/` — dashboard
-- `/users` — users list
-- `/users/new`, `/users/:id/edit` — user form
-- `/roles` — roles list
-- `/roles/new`, `/roles/:id/edit` — role form
-- `/permissions` — permissions list
-- `/permissions/new`, `/permissions/:id/edit` — permission form
-- `/my-account` — my account + sessions (`GET /sessions`, `DELETE /sessions/:id`)
+| Path | Description |
+|------|-------------|
+| `/login` | Sign in |
+| `/` | Dashboard |
+| `/settings` | Settings |
+| **Clients** | |
+| `/clients` | Clients list |
+| `/clients/new`, `/clients/:id/edit` | Client form |
+| `/clients/storage` | File storage |
+| `/credits` | Credits |
+| `/jobs` | Transcription jobs |
+| `/transcripts` | Transcripts |
+| **Administration** | |
+| `/users` | System users |
+| `/users/new`, `/users/:id/edit` | User form |
+| `/roles` | Roles |
+| `/roles/new`, `/roles/:id/edit` | Role form |
+| `/permissions` | Permissions |
+| `/permissions/new`, `/permissions/:id/edit` | Permission form |
+| `/my-account` | My account + sessions |
 
 ## Project Structure
 
 ```text
 src/
   app/              # router, providers
-  entities/         # domain base types
-  features/         # auth, users, roles, permissions, theme
+  entities/         # domain base types (client, credit, job, transcript, file, user, role, permission)
+  features/         # auth, users, roles, permissions, clients, credits, jobs, transcripts, files, theme
   pages/            # route pages
-  shared/           # api client, shared UI, constants
-  widgets/          # layout/sidebar
+  shared/           # api client, shared UI, constants, composables
+  widgets/          # layout, sidebar
 ```
 
 ## Notes
 
 - Sessions are not mocked; list/delete operations use real API endpoints.
-- The `My Account` dropdown item opens the account page.
+- The "My Account" dropdown item opens the account page.
 - Profile editing fields are planned for a next iteration and are currently a placeholder.
