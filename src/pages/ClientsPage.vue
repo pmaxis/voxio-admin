@@ -22,6 +22,7 @@
           <template #head>
             <TableTh>Telegram ID</TableTh>
             <TableTh>Username</TableTh>
+            <TableTh>Секунд</TableTh>
             <TableTh>Створено</TableTh>
             <TableTh v-if="canUpdate || canDelete" align="end">Дії</TableTh>
           </template>
@@ -38,6 +39,9 @@
             </TableTd>
             <TableTd>
               <span class="text-zinc-200">{{ c.username ?? '—' }}</span>
+            </TableTd>
+            <TableTd>
+              <span class="text-zinc-200 font-medium">{{ c.balance ?? 0 }}</span>
             </TableTd>
             <TableTd>
               <span class="text-zinc-400 text-sm">{{ formatDate(c.createdAt) }}</span>

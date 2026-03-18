@@ -43,10 +43,28 @@ const navStructureRaw: NavItem[] = [
         routeNames: ['clients', 'clientCreate', 'clientEdit'],
       },
       {
+        name: 'credits',
+        label: 'Кредити',
+        to: { name: 'credits' },
+        routeNames: ['credits'],
+      },
+      {
         name: 'storage',
         label: 'Сховище',
         to: { name: 'storage' },
         routeNames: ['storage'],
+      },
+      {
+        name: 'jobs',
+        label: 'Завдання',
+        to: { name: 'jobs' },
+        routeNames: ['jobs'],
+      },
+      {
+        name: 'transcripts',
+        label: 'Транскрипти',
+        to: { name: 'transcripts' },
+        routeNames: ['transcripts'],
       },
     ],
   },

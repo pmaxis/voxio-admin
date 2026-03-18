@@ -7,15 +7,41 @@
       <template v-else>
         <div class="mb-4 flex items-center justify-between">
           <h2 class="text-base font-medium text-zinc-200">Сховище</h2>
+          <div class="flex gap-1 rounded-lg border border-zinc-700 bg-zinc-800/50 p-1">
+            <button
+              type="button"
+              :class="[
+                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                activeTab === 'input'
+                  ? 'bg-zinc-600 text-zinc-100'
+                  : 'text-zinc-400 hover:text-zinc-200',
+              ]"
+              @click="activeTab = 'input'"
+            >
+              Вхідні
+            </button>
+            <button
+              type="button"
+              :class="[
+                'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                activeTab === 'output'
+                  ? 'bg-zinc-600 text-zinc-100'
+                  : 'text-zinc-400 hover:text-zinc-200',
+              ]"
+              @click="activeTab = 'output'"
+            >
+              Вихідні
+            </button>
+          </div>
         </div>
 
         <ErrorMessage :message="error" class="mb-4" />
 
         <div v-if="loading" class="text-zinc-400 text-sm">Завантаження…</div>
-        <div v-else-if="files.length === 0" class="text-zinc-500 text-sm">
+        <div v-else-if="currentFiles.length === 0" class="text-zinc-500 text-sm">
           Файлів поки немає.
         </div>
-        <Table v-else :items="files" key-field="id">
+        <Table v-else :items="currentFiles" key-field="id">
           <template #head>
             <TableTh>Файл</TableTh>
             <TableTh>Тип</TableTh>
@@ -28,7 +54,10 @@
               <span class="font-mono text-sm text-zinc-300 break-all">{{ f.url }}</span>
             </TableTd>
             <TableTd>
-              <Chip :color="f.type === 'INPUT_AUDIO' ? 'blue' : 'green'" :is-light-theme="isLightTheme">
+              <Chip
+                :color="f.type === 'INPUT_AUDIO' ? 'blue' : 'green'"
+                :is-light-theme="isLightTheme"
+              >
                 {{ fileTypeLabel(f.type) }}
               </Chip>
             </TableTd>
@@ -85,6 +114,14 @@ const canDelete = computed(() => can(PERMISSIONS.MANAGE_ALL));
 const { successWithUndo, error: showError } = useToast();
 const filesStore = useFilesStore();
 const { files, loading, error } = storeToRefs(filesStore);
+
+const activeTab = ref<'input' | 'output'>('input');
+
+const inputFiles = computed(() => files.value.filter((f) => f.type === 'INPUT_AUDIO'));
+const outputFiles = computed(() => files.value.filter((f) => f.type === 'OUTPUT_AUDIO'));
+const currentFiles = computed(() =>
+  activeTab.value === 'input' ? inputFiles.value : outputFiles.value,
+);
 
 const deleteTarget = ref<File | null>(null);
 

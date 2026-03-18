@@ -7,7 +7,15 @@ import AppLayout from '@/widgets/layout/AppLayout.vue';
 const usersRouteNames = ['users', 'userCreate', 'userEdit'] as const;
 const rolesRouteNames = ['roles', 'roleCreate', 'roleEdit'] as const;
 const permissionsRouteNames = ['permissions', 'permissionCreate', 'permissionEdit'] as const;
-const clientsRouteNames = ['clients', 'clientCreate', 'clientEdit', 'storage'] as const;
+const clientsRouteNames = [
+  'clients',
+  'clientCreate',
+  'clientEdit',
+  'storage',
+  'credits',
+  'jobs',
+  'transcripts',
+] as const;
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -97,6 +105,21 @@ const router = createRouter({
           path: 'clients',
           name: 'clients',
           component: () => import('@/pages/ClientsPage.vue'),
+        },
+        {
+          path: 'credits',
+          name: 'credits',
+          component: () => import('@/pages/CreditsPage.vue'),
+        },
+        {
+          path: 'jobs',
+          name: 'jobs',
+          component: () => import('@/pages/JobsPage.vue'),
+        },
+        {
+          path: 'transcripts',
+          name: 'transcripts',
+          component: () => import('@/pages/TranscriptsPage.vue'),
         },
         {
           path: 'my-account',
